@@ -26,6 +26,7 @@ QAtemMixEffect::QAtemMixEffect(quint8 id, QAtemConnection *parent) :
     m_previewInput = 0;
 
     m_transitionPreviewEnabled = false;
+    m_transitionActive = false;
     m_transitionFrameCount = 0;
     m_transitionPosition = 0;
     m_keyersOnCurrentTransition = 0;
@@ -1606,12 +1607,20 @@ void QAtemMixEffect::onTrPr(const QByteArray& payload)
 
 void QAtemMixEffect::onTrPs(const QByteArray& payload)
 {
+    bool trActiveBefore = false;
     quint8 me = (quint8)payload.at(6);
 
     if(me == m_id)
     {
+        trActiveBefore = m_transitionActive;
+        m_transitionActive = (quint8)payload.at(7) == 1;
+
         m_transitionFrameCount = (quint8)payload.at(8);
         m_transitionPosition = ((quint8)payload.at(11) | ((quint8)payload.at(10) << 8));
+
+        if (trActiveBefore != m_transitionActive) {
+            emit transitionActiveChanged(m_id, m_transitionActive);
+        }
 
         emit transitionFrameCountChanged(m_id, m_transitionFrameCount);
         emit transitionPositionChanged(m_id, m_transitionPosition);

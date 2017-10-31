@@ -41,6 +41,8 @@ public:
 
     /// @returns true if transition preview is enabled
     bool transitionPreviewEnabled() const { return m_transitionPreviewEnabled; }
+    /// @returns true if transition is in progress
+    bool transitionActive() const { return m_transitionActive; }
     /// @returns number of frames left of transition
     quint8 transitionFrameCount() const { return m_transitionFrameCount; }
     /// @returns percent left of transition
@@ -484,6 +486,7 @@ private:
     quint16 m_previewInput;
 
     bool m_transitionPreviewEnabled;
+    bool m_transitionActive;
     quint8 m_transitionFrameCount;
     quint16 m_transitionPosition;
     quint8 m_keyersOnCurrentTransition;
@@ -541,6 +544,7 @@ signals:
     void previewInputChanged(quint8 me, quint16 oldIndex, quint16 newIndex);
 
     void transitionPreviewChanged(quint8 me, bool state);
+    void transitionActiveChanged(quint8 me, bool state);
     void transitionFrameCountChanged(quint8 me, quint8 count);
     void transitionPositionChanged(quint8 me, quint16 count);
     void nextTransitionStyleChanged(quint8 me, quint8 style);
